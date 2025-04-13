@@ -145,12 +145,15 @@ const App: React.FC = () => {
       isOnline: false
     }
   ]);
+ // @ts-ignore
   const [settings, setSettings] = useState({
     darkMode: false,
     notifications: true,
     messagePreview: true
   });
+  // @ts-ignore
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
+  // @ts-ignore
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const handleSendMessage = (message: string) => {

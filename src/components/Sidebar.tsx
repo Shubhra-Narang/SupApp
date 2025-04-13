@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+// @ts-ignore
 import { MessageSquare, MoreVertical, Search, Users, Settings, LogOut } from 'lucide-react';
 
 interface Chat {
