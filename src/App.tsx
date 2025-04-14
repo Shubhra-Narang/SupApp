@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import ChatComponent from './components/Chat';
+import NewGroupModal from './components/NewGroupModal';
+import SettingsModal from './components/SettingsModal';
 import Login from './Login';
 
 interface Message {
@@ -30,6 +32,13 @@ interface Chat {
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
+  const [showNewGroupModal, setShowNewGroupModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [settings, setSettings] = useState({
+    darkMode: false,
+    notifications: true,
+    sound: true
+  });
   const [messages, setMessages] = useState<Record<string, Message[]>>({
     '1': [
       { id: '1', content: "Hey Sarah, how's the project going?", sent: false, time: "10:00 AM", status: 'read' },
@@ -145,16 +154,6 @@ const App: React.FC = () => {
       isOnline: false
     }
   ]);
- // @ts-ignore
-  const [settings, setSettings] = useState({
-    darkMode: false,
-    notifications: true,
-    messagePreview: true
-  });
-  // @ts-ignore
-  const [showNewGroupModal, setShowNewGroupModal] = useState(false);
-  // @ts-ignore
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const handleSendMessage = (message: string) => {
     if (selectedChat) {
@@ -258,13 +257,51 @@ const App: React.FC = () => {
     setShowNewGroupModal(true);
   };
 
+  const handleCreateGroup = (name: string, memberIds: string[]) => {
+    const newGroupId = String(Date.now());
+    const selectedMembers = chats
+      .filter(chat => memberIds.includes(chat.id))
+      .map(chat => chat.name);
+
+    const newGroup: Chat = {
+      id: newGroupId,
+      name: name,
+      lastMessage: 'Group created',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      unread: 0,
+      avatar: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=100&h=100&fit=crop',
+      isGroup: true,
+      members: selectedMembers
+    };
+
+    setChats(prev => [newGroup, ...prev]);
+    setMessages(prev => ({
+      ...prev,
+      [newGroupId]: []
+    }));
+    setSelectedChat(newGroupId);
+    setShowNewGroupModal(false);
+  };
+
   const handleSettings = () => {
     setShowSettingsModal(true);
+  };
+
+  const handleUpdateSettings = (newSettings: typeof settings) => {
+    setSettings(newSettings);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
   };
+
+  const availableUsers = chats
+    .filter(chat => !chat.isGroup)
+    .map(chat => ({
+      id: chat.id,
+      name: chat.name,
+      avatar: chat.avatar
+    }));
 
   return (
     <div className={`flex h-screen ${settings.darkMode ? 'dark bg-[#111b21]' : 'bg-gray-100'}`}>
@@ -272,6 +309,23 @@ const App: React.FC = () => {
         <Login onLogin={() => setIsLoggedIn(true)} />
       ) : (
         <>
+          {showNewGroupModal && (
+            <NewGroupModal
+              isOpen={showNewGroupModal}
+              onClose={() => setShowNewGroupModal(false)}
+              onCreateGroup={handleCreateGroup}
+              availableUsers={availableUsers}
+              darkMode={settings.darkMode}
+            />
+          )}
+          {showSettingsModal && (
+            <SettingsModal
+              isOpen={showSettingsModal}
+              onClose={() => setShowSettingsModal(false)}
+              settings={settings}
+              onUpdateSettings={handleUpdateSettings}
+            />
+          )}
           <Sidebar
             chats={chats}
             selectedChat={selectedChat}
