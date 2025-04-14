@@ -112,46 +112,9 @@ const App: React.FC = () => {
       lastMessage: "Meeting at 3 PM",
       time: "Yesterday",
       unread: 3,
-      avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&h=100&fit=crop",
+      avatar: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=100&h=100&fit=crop",
       isGroup: true,
-      members: ["Sarah Wilson", "Mike Johnson", "David Brown", "Lisa Chen"]
-    },
-    {
-      id: '7',
-      name: "David Brown",
-      lastMessage: "The design looks great!",
-      time: "Yesterday",
-      unread: 0,
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
-      isOnline: true
-    },
-    {
-      id: '8',
-      name: "Lisa Chen",
-      lastMessage: "I'll send the files",
-      time: "Yesterday",
-      unread: 0,
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop",
-      isOnline: false
-    },
-    {
-      id: '9',
-      name: "Marketing Team",
-      lastMessage: "Campaign launch tomorrow",
-      time: "2 days ago",
-      unread: 7,
-      avatar: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=100&h=100&fit=crop",
-      isGroup: true,
-      members: ["Emily Davis", "Lisa Chen", "Alex Turner", "Rachel Green"]
-    },
-    {
-      id: '10',
-      name: "Alex Turner",
-      lastMessage: "Let's catch up soon",
-      time: "2 days ago",
-      unread: 0,
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
-      isOnline: false
+      members: ["Sarah Wilson", "Mike Johnson"]
     }
   ]);
 
@@ -163,7 +126,7 @@ const App: React.FC = () => {
         content: message,
         sent: true,
         time: currentTime,
-        status: 'sending'
+        status: 'sent'
       };
 
       setMessages(prev => ({
@@ -171,20 +134,19 @@ const App: React.FC = () => {
         [selectedChat]: [...(prev[selectedChat] || []), newMsg]
       }));
 
+      // Update last message in chat list
       setChats(chats.map(chat =>
         chat.id === selectedChat
           ? { ...chat, lastMessage: message, time: currentTime }
           : chat
       ));
 
-      // Simulate message delivery and read status
+      // Simulate message status updates
       setTimeout(() => {
         setMessages(prev => ({
           ...prev,
           [selectedChat]: prev[selectedChat].map(msg =>
-            msg.id === newMsg.id
-              ? { ...msg, status: 'delivered' }
-              : msg
+            msg.id === newMsg.id ? { ...msg, status: 'delivered' } : msg
           )
         }));
       }, 1000);
@@ -193,9 +155,7 @@ const App: React.FC = () => {
         setMessages(prev => ({
           ...prev,
           [selectedChat]: prev[selectedChat].map(msg =>
-            msg.id === newMsg.id
-              ? { ...msg, status: 'read' }
-              : msg
+            msg.id === newMsg.id ? { ...msg, status: 'read' } : msg
           )
         }));
       }, 2000);
@@ -207,7 +167,7 @@ const App: React.FC = () => {
       const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const newMsg: Message = {
         id: String(Date.now()),
-        content: `File: ${file.name}`,
+        content: 'File',
         sent: true,
         time: currentTime,
         type: 'file',
