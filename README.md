@@ -2,6 +2,8 @@
 
 A modern chat application built with React and Vite, featuring real-time messaging, group chats, and a sleek dark mode interface.
 
+deployed link : https://sup-app-uiow.vercel.app/
+
 ## Features
 
 - 💬 Real-time messaging
