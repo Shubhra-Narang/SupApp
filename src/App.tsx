@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Sidebar from './components/Sidebar.tsx';
-import ChatComponent from './components/Chat.tsx';
-import NewGroupModal from './components/NewGroupModal.tsx';
-import SettingsModal from './components/SettingsModal.tsx';
-import Login from './Login.tsx';
+import Sidebar from './components/Sidebar';
+import ChatComponent from './components/Chat';
+import NewGroupModal from './components/NewGroupModal';
+import SettingsModal from './components/SettingsModal';
+import Login from './Login';
 
 interface Message {
   id: string;
